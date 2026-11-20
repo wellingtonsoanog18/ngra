@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0D0E11" />
+  <title>NGRA Lavagem Automotiva | Agendamento Online</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-dark: #0D0E11;
+      --surface-card: #16181D;
+      --surface-elevated: #1E2128;
+      --gold-primary: #D4AF37;
+      --gold-light: #F3D478;
+      --gold-dark: #A6821E;
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .gold-gradient {
+      background: linear-gradient(135deg, #D4AF37 0%, #F3D478 50%, #B88E22 100%);
+    }
+
+    .gold-text {
+      background: linear-gradient(135deg, #F3D478 0%, #D4AF37 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-glass {
+      background: rgba(22, 24, 29, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .selected-card {
+      border: 1.5px solid #D4AF37 !important;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.14) 0%, rgba(22, 24, 29, 0.98) 100%) !important;
+      box-shadow: 0 0 20px rgba(212, 175, 55, 0.16);
+    }
+
+    .slot-booked {
+      background: rgba(220, 38, 38, 0.16) !important;
+      border: 1.5px solid rgba(239, 68, 68, 0.7) !important;
+      color: #FCA5A5 !important;
+      cursor: not-allowed !important;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0D0E11;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2C303A;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="pb-28 lg:pb-12">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] hidden max-w-[92vw] w-auto px-4 py-3 rounded-xl bg-[#1E2128] border border-[#D4AF37]/60 text-sm font-medium text-white shadow-2xl transition-all"></div>
+
+  <!-- Header (Responsive: Full width container on Desktop, compact on Mobile) -->
+  <header class="sticky top-0 z-40 bg-[#0D0E11]/95 backdrop-blur-md border-b border-white/10">
+    <div class="max-w-5xl mx-auto px-4 lg:px-6 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3.5 min-w-0">
+        <!-- Emblema SVG oficial estilo NGRA Lavagem Automotiva -->
+        <div class="w-12 h-12 lg:w-14 lg:h-14 rounded-xl bg-[#16181D] border border-[#D4AF37]/40 flex items-center justify-center shrink-0 overflow-hidden shadow-md">
+          <svg viewBox="0 0 120 90" class="w-11 h-11 lg:w-12 lg:h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="ngraGold" x1="0" y1="0" x2="120" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#F6DC88" />
+                <stop offset="50%" stop-color="#D4AF37" />
+                <stop offset="100%" stop-color="#9A7216" />
+              </linearGradient>
+            </defs>
+            <path d="M22 46C24 22 48 10 76 14C92 16 102 24 106 32" stroke="url(#ngraGold)" stroke-width="4.5" stroke-linecap="round" />
+            <path d="M34 38C48 29 70 28 88 37L103 44C106 45 107 49 103 50H26C23 50 23 45 27 43L34 38Z" fill="#0B0C0E" stroke="url(#ngraGold)" stroke-width="2.2" />
+            <path d="M84 22L86 27L91 29L86 31L84 36L82 31L77 29L82 27L84 22Z" fill="#F3D478" />
+            <text x="60" y="69" text-anchor="middle" fill="#FFFFFF" stroke="url(#ngraGold)" stroke-width="1" font-size="23" font-weight="900" letter-spacing="2">NGRA</text>
+            <rect x="14" y="74" width="92" height="11" rx="2" fill="url(#ngraGold)" />
+            <text x="60" y="82" text-anchor="middle" fill="#0D0E11" font-size="6.4" font-weight="800" letter-spacing="1.1">LAVAGEM AUTOMOTIVA</text>
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <h1 class="text-base lg:text-lg font-extrabold tracking-tight text-white truncate">NGRA Lavagem Automotiva</h1>
+            <span id="device-mode-badge" class="hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-[10px] font-semibold text-slate-300"></span>
+          </div>
+          <p class="text-[11px] lg:text-xs text-slate-400 truncate">Rua D Vl Amazonia, 244 • Rubem Berta, Porto Alegre - RS</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5 shrink-0">
+        <a href="https://wa.me/5551985377892" target="_blank" rel="noopener" aria-label="Contato WhatsApp" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/35 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/25 transition">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86s.274.072.376-.043c.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824z"/></svg>
+        </a>
+        <button id="btn-auth-header" onclick="openAuthModal()" class="px-3.5 py-2 lg:px-4 lg:py-2.5 rounded-xl bg-[#1E2128] border border-[#D4AF37]/45 text-xs font-bold text-[#F3D478] hover:bg-[#D4AF37]/15 transition flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          <span id="auth-header-label">Acessar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stepper Bar -->
+    <div id="stepper-bar" class="max-w-5xl mx-auto px-4 lg:px-6 pb-3">
+      <div class="grid grid-cols-4 gap-2 lg:gap-4">
+        <div class="step-pill" data-step="1">
+          <div class="h-1.5 rounded-full bg-[#D4AF37] transition-all" id="bar-1"></div>
+          <span class="block text-[10px] lg:text-xs font-bold text-[#F3D478] mt-1">1. Veículo</span>
+        </div>
+        <div class="step-pill" data-step="2">
+          <div class="h-1.5 rounded-full bg-white/10 transition-all" id="bar-2"></div>
+          <span class="block text-[10px] lg:text-xs font-semibold text-slate-400 mt-1" id="label-2">2. Serviços</span>
+        </div>
+        <div class="step-pill" data-step="3">
+          <div class="h-1.5 rounded-full bg-white/10 transition-all" id="bar-3"></div>
+          <span class="block text-[10px] lg:text-xs font-semibold text-slate-400 mt-1" id="label-3">3. Data/Hora</span>
+        </div>
+        <div class="step-pill" data-step="4">
+          <div class="h-1.5 rounded-full bg-white/10 transition-all" id="bar-4"></div>
+          <span class="block text-[10px] lg:text-xs font-semibold text-slate-400 mt-1" id="label-4">4. Confirmar</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Responsive Layout (Single Column on Mobile, 2-Column Dashboard on Desktop) -->
+  <main class="max-w-5xl mx-auto px-4 lg:px-6 pt-6">
+
+    <!-- User Active Banner -->
+    <div id="logged-user-banner" class="hidden mb-5 p-3.5 rounded-2xl bg-[#16181D] border border-[#D4AF37]/35 flex items-center justify-between gap-2">
+      <div class="min-w-0">
+        <p class="text-xs text-slate-400">Conectado como</p>
+        <p id="logged-user-name" class="text-sm font-bold text-white truncate"></p>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button onclick="openAuthModal()" class="px-3 py-1.5 rounded-lg bg-white/5 text-xs font-semibold text-[#F3D478] hover:bg-white/10">Minha Conta</button>
+        <button onclick="logoutCurrentUser()" class="px-3 py-1.5 rounded-lg bg-red-500/15 text-xs font-semibold text-red-300 hover:bg-red-500/25">Sair</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT COLUMN: MAIN STEPS -->
+      <div class="lg:col-span-8 space-y-5">
+
+        <!-- STEP 1: VEHICLE CATEGORY -->
+        <section id="step-1" class="space-y-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37]">Etapa 1 de 4</span>
+            <h2 class="text-xl lg:text-2xl font-extrabold text-white mt-0.5">Qual é o porte do seu veículo?</h2>
+            <p class="text-xs lg:text-sm text-slate-400 mt-1">Os valores dos serviços são ajustados automaticamente conforme a categoria.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-3">
+            <button type="button" onclick="selectVehicle('moto')" id="veh-moto" class="vehicle-card card-glass rounded-2xl p-4 text-left flex items-center justify-between transition hover:border-[#D4AF37]/50">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 flex items-center justify-center text-2xl shrink-0">🏍️</div>
+                <div>
+                  <h3 class="font-bold text-white text-base">Moto</h3>
+                  <p class="text-xs text-slate-400">Lavagem detalhada a partir de <strong class="text-[#F3D478]">R$ 39,00</strong></p>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xs text-[#D4AF37] check-dot shrink-0">✓</span>
+            </button>
+
+            <button type="button" onclick="selectVehicle('hatch')" id="veh-hatch" class="vehicle-card selected-card card-glass rounded-2xl p-4 text-left flex items-center justify-between transition hover:border-[#D4AF37]/50">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 flex items-center justify-center text-2xl shrink-0">🚗</div>
+                <div>
+                  <h3 class="font-bold text-white text-base">Hatch / Sedan</h3>
+                  <p class="text-xs text-slate-400">Carros de passeio a partir de <strong class="text-[#F3D478]">R$ 59,90</strong></p>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full bg-[#D4AF37] text-[#0D0E11] font-bold flex items-center justify-center text-xs check-dot shrink-0">✓</span>
+            </button>
+
+            <button type="button" onclick="selectVehicle('suv')" id="veh-suv" class="vehicle-card card-glass rounded-2xl p-4 text-left flex items-center justify-between transition hover:border-[#D4AF37]/50">
+              <div class="flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/30 flex items-center justify-center text-2xl shrink-0">🚙</div>
+                <div>
+                  <h3 class="font-bold text-white text-base">SUV / Pick-up</h3>
+                  <p class="text-xs text-slate-400">Utilitários e caminhonetes a partir de <strong class="text-[#F3D478]">R$ 79,90</strong></p>
+                </div>
+              </div>
+              <span class="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center text-xs text-[#D4AF37] check-dot shrink-0">✓</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- STEP 2: SERVICES -->
+        <section id="step-2" class="hidden space-y-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37]">Etapa 2 de 4</span>
+            <h2 class="text-xl lg:text-2xl font-extrabold text-white mt-0.5">Escolha os serviços desejados</h2>
+            <p class="text-xs lg:text-sm text-slate-400 mt-1">Selecione um ou mais serviços para o seu <span id="step2-veh-label" class="text-[#F3D478] font-semibold">Hatch / Sedan</span>.</p>
+          </div>
+
+          <div id="services-list" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </section>
+
+        <!-- STEP 3: DATE, TIME & LOGISTICS -->
+        <section id="step-3" class="hidden space-y-5">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37]">Etapa 3 de 4</span>
+            <h2 class="text-xl lg:text-2xl font-extrabold text-white mt-0.5">Data, Horário e Entrega</h2>
+            <p class="text-xs lg:text-sm text-slate-400 mt-1">Atendimento de Segunda a Sábado (fechado aos domingos).</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Date Picker -->
+            <div class="card-glass rounded-2xl p-4 space-y-2">
+              <label for="booking-date" class="block text-xs font-bold uppercase tracking-wide text-slate-300">Data do Agendamento</label>
+              <input type="date" id="booking-date" onchange="handleDateChange()" class="w-full px-3.5 py-3 rounded-xl bg-[#0D0E11] border border-white/15 text-white text-sm focus:outline-none focus:border-[#D4AF37]" />
+              <p id="sunday-warning" class="hidden text-xs font-semibold text-red-400">⚠️ Não atendemos aos domingos. Selecione de segunda a sábado.</p>
+            </div>
+
+            <!-- Time Slots -->
+            <div class="card-glass rounded-2xl p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wide text-slate-300">Horários</span>
+                <div class="flex items-center gap-3 text-[11px]">
+                  <span class="flex items-center gap-1 text-slate-300"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"></span> Livre</span>
+                  <span class="flex items-center gap-1 text-red-300"><span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span> Ocupado</span>
+                </div>
+              </div>
+              <div id="time-slots-grid" class="grid grid-cols-3 gap-2"></div>
+            </div>
+          </div>
+
+          <!-- Delivery Mode -->
+          <div class="card-glass rounded-2xl p-4 space-y-3">
+            <span class="block text-xs font-bold uppercase tracking-wide text-slate-300">Como prefere entregar o veículo?</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              <button type="button" onclick="setDeliveryMode('store')" id="mode-store-btn" class="selected-card rounded-xl p-3.5 text-left border border-white/10 transition">
+                <div class="font-bold text-sm text-white">🏪 Levar até a lavagem</div>
+                <div class="text-xs text-emerald-400 font-semibold mt-0.5">Taxa Grátis (R$ 0,00)</div>
+              </button>
+              <button type="button" onclick="setDeliveryMode('pickup')" id="mode-pickup-btn" class="rounded-xl p-3.5 text-left bg-[#0D0E11] border border-white/10 transition">
+                <div class="font-bold text-sm text-white">🚗 Leva e Traz</div>
+                <div class="text-xs text-[#F3D478] font-semibold mt-0.5">Busca e entrega no local</div>
+              </button>
+            </div>
+
+            <!-- Store Navigation Links -->
+            <div id="store-nav-box" class="pt-2 border-t border-white/10 space-y-2">
+              <p class="text-xs text-slate-300">📍 <strong>Sede NGRA:</strong> Rua D Vl Amazonia, 244 - Rubem Berta, Porto Alegre - RS</p>
+              <div class="grid grid-cols-2 gap-2">
+                <a href="https://www.google.com/maps/search/?api=1&query=Rua+D+Vl+Amazonia+244+Rubem+Berta+Porto+Alegre+RS" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-blue-500/15 border border-blue-400/35 text-blue-300 text-xs font-bold text-center hover:bg-blue-500/25 transition">
+                  🗺️ Abrir Google Maps
+                </a>
+                <a href="https://waze.com/ul?q=Rua%20D%20Vl%20Amazonia%20244%20Rubem%20Berta%20Porto%20Alegre&navigate=yes" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-xs font-bold text-center hover:bg-cyan-500/25 transition">
+                  🚘 Abrir no Waze
+                </a>
+              </div>
+            </div>
+
+            <!-- Pickup Address Box -->
+            <div id="pickup-address-box" class="hidden pt-2 border-t border-white/10 space-y-2.5">
+              <label for="pickup-address-input" class="block text-xs font-semibold text-slate-300">Informe o endereço exato (Rua e Número):</label>
+              <div class="flex gap-2">
+                <input type="text" id="pickup-address-input" placeholder="Ex: Assis Brasil, 5023" oninput="debouncedCalculatePickup()" class="flex-1 px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+                <button type="button" onclick="calculatePickupFee()" class="px-4 py-2.5 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold shrink-0">Calcular</button>
+              </div>
+              <div id="pickup-calc-result" class="hidden rounded-xl bg-[#0D0E11] border border-[#D4AF37]/30 p-3 space-y-1 text-xs"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 4: SUMMARY & CONFIRMATION -->
+        <section id="step-4" class="hidden space-y-4">
+          <div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-[#D4AF37]">Etapa 4 de 4</span>
+            <h2 class="text-xl lg:text-2xl font-extrabold text-white mt-0.5">Seus Dados e Resumo</h2>
+            <p class="text-xs lg:text-sm text-slate-400 mt-1">Revise os detalhes e finalize seu agendamento.</p>
+          </div>
+
+          <!-- Customer Details -->
+          <div class="card-glass rounded-2xl p-4 space-y-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Seu Nome Completo *</label>
+              <input type="text" id="cust-name" placeholder="Digite seu nome" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">WhatsApp / Telefone *</label>
+                <input type="tel" id="cust-phone" placeholder="(51) 99999-9999" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1">Modelo / Placa do Veículo</label>
+                <input type="text" id="cust-car" placeholder="Ex: T-Cross / ABC-1D23" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Option Sync on Step 4 -->
+          <div class="card-glass rounded-2xl p-4 space-y-3">
+            <span class="block text-xs font-bold uppercase tracking-wide text-slate-300">Modalidade de Entrega</span>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="setDeliveryMode('store')" id="step4-mode-store" class="selected-card rounded-xl p-2.5 text-left border border-white/10 text-xs">
+                <div class="font-bold text-white">🏪 Vou levar</div>
+                <div class="text-emerald-400 font-semibold">Grátis</div>
+              </button>
+              <button type="button" onclick="setDeliveryMode('pickup')" id="step4-mode-pickup" class="rounded-xl p-2.5 text-left bg-[#0D0E11] border border-white/10 text-xs">
+                <div class="font-bold text-white">🚗 Leva e Traz</div>
+                <div class="text-[#F3D478] font-semibold">Busca em casa</div>
+              </button>
+            </div>
+
+            <div id="step4-store-links" class="grid grid-cols-2 gap-2 pt-1">
+              <a href="https://www.google.com/maps/search/?api=1&query=Rua+D+Vl+Amazonia+244+Rubem+Berta+Porto+Alegre+RS" target="_blank" rel="noopener" class="py-2 px-2.5 rounded-lg bg-blue-500/15 border border-blue-400/35 text-blue-300 text-[11px] font-bold text-center">🗺️ Google Maps</a>
+              <a href="https://waze.com/ul?q=Rua%20D%20Vl%20Amazonia%20244%20Rubem%20Berta%20Porto%20Alegre&navigate=yes" target="_blank" rel="noopener" class="py-2 px-2.5 rounded-lg bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-[11px] font-bold text-center">🚘 Waze</a>
+            </div>
+
+            <div id="step4-pickup-box" class="hidden space-y-2 pt-1">
+              <div class="flex gap-2">
+                <input type="text" id="step4-pickup-input" placeholder="Rua e número para busca" oninput="syncPickupInputFromStep4()" class="flex-1 px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white focus:outline-none focus:border-[#D4AF37]" />
+                <button type="button" onclick="calculatePickupFee()" class="px-3 py-2 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Calcular</button>
+              </div>
+              <div id="step4-pickup-result" class="hidden text-[11px] text-[#F3D478] bg-[#0D0E11] p-2.5 rounded-lg border border-[#D4AF37]/30"></div>
+            </div>
+          </div>
+
+          <!-- Mobile Summary Card -->
+          <div class="lg:hidden card-glass rounded-2xl p-4 space-y-2.5 border border-[#D4AF37]/40">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#F3D478]">Resumo do Agendamento</h3>
+            <div id="summary-content" class="space-y-1.5 text-xs text-slate-300"></div>
+            <div class="pt-2.5 border-t border-white/10 flex items-center justify-between">
+              <span class="text-sm font-bold text-white">Total Estimado</span>
+              <span id="summary-total" class="text-lg font-extrabold gold-text">R$ 0,00</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 5: SUCCESS SCREEN -->
+        <section id="step-success" class="hidden space-y-4">
+          <div class="card-glass rounded-3xl p-6 text-center space-y-4 border border-emerald-500/40">
+            <div class="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/50 mx-auto flex items-center justify-center text-3xl">✅</div>
+            <div>
+              <h2 class="text-xl font-extrabold text-white">Agendado com Sucesso!</h2>
+              <p class="text-xs text-slate-300 mt-1">Seu horário já está reservado no sistema da <strong>NGRA Lavagem Automotiva</strong>.</p>
+            </div>
+
+            <div id="success-receipt" class="text-left bg-[#0D0E11] rounded-2xl p-4 border border-white/10 space-y-1.5 text-xs text-slate-300"></div>
+
+            <div id="success-nav-links" class="hidden grid grid-cols-2 gap-2">
+              <a href="https://www.google.com/maps/search/?api=1&query=Rua+D+Vl+Amazonia+244+Rubem+Berta+Porto+Alegre+RS" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-blue-500/15 border border-blue-400/35 text-blue-300 text-xs font-bold text-center">🗺️ Google Maps</a>
+              <a href="https://waze.com/ul?q=Rua%20D%20Vl%20Amazonia%20244%20Rubem%20Berta%20Porto%20Alegre&navigate=yes" target="_blank" rel="noopener" class="py-2.5 px-3 rounded-xl bg-cyan-500/15 border border-cyan-400/35 text-cyan-300 text-xs font-bold text-center">🚘 Waze</a>
+            </div>
+
+            <div class="pt-2 space-y-2">
+              <a id="success-whatsapp-btn" href="#" target="_blank" rel="noopener" class="w-full py-3.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm flex items-center justify-center gap-2 transition">
+                <span>Enviar Comprovante no WhatsApp</span>
+              </a>
+              <button type="button" onclick="resetBooking()" class="w-full py-3 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-bold transition">
+                Fazer Novo Agendamento
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN: DESKTOP LIVE SUMMARY & NAVIGATION PANEL -->
+      <aside id="desktop-sidebar" class="hidden lg:block lg:col-span-4 sticky top-28 space-y-4">
+        <div class="card-glass rounded-3xl p-5 space-y-4 border border-[#D4AF37]/35">
+          <div class="flex items-center justify-between border-b border-white/10 pb-3">
+            <h3 class="text-xs font-extrabold uppercase tracking-wider text-[#F3D478]">Resumo em Tempo Real</h3>
+            <span class="text-[11px] text-slate-400">Etapa <span id="desktop-step-num">1</span>/4</span>
+          </div>
+
+          <div id="desktop-summary-content" class="space-y-2 text-xs text-slate-300"></div>
+
+          <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+            <span class="text-sm font-bold text-white">Total Estimado</span>
+            <span id="desktop-total" class="text-xl font-extrabold gold-text">R$ 0,00</span>
+          </div>
+
+          <div id="desktop-nav-buttons" class="pt-2 flex flex-col gap-2">
+            <button type="button" id="desktop-btn-next" onclick="nextStep()" class="w-full py-3.5 px-4 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold shadow-lg hover:opacity-95 transition">
+              Continuar →
+            </button>
+            <button type="button" id="desktop-btn-prev" onclick="prevStep()" class="hidden w-full py-2.5 px-4 rounded-xl bg-[#1E2128] border border-white/10 text-xs font-bold text-slate-200 hover:bg-white/10 transition">
+              ← Voltar Etapa
+            </button>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </main>
+
+  <!-- Mobile Sticky Footer Navigation -->
+  <footer id="footer-nav" class="lg:hidden fixed bottom-0 inset-x-0 z-40 bg-[#0D0E11]/95 backdrop-blur-md border-t border-white/10">
+    <div class="max-w-xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+      <div>
+        <span class="block text-[10px] uppercase tracking-wider text-slate-400">Total parcial</span>
+        <span id="footer-total" class="text-base font-extrabold gold-text">R$ 0,00</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" id="btn-prev" onclick="prevStep()" class="hidden px-4 py-3 rounded-xl bg-[#1E2128] border border-white/10 text-xs font-bold text-slate-200 hover:bg-white/10 transition">
+          Voltar
+        </button>
+        <button type="button" id="btn-next" onclick="nextStep()" class="px-6 py-3 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold shadow-lg hover:opacity-95 transition">
+          Continuar →
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- UNIFIED AUTH MODAL (USER + ADMIN/SUPERVISOR DETECTION) -->
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="card-glass w-full max-w-md rounded-3xl p-5 space-y-4 max-h-[90vh] overflow-y-auto border border-[#D4AF37]/40">
+      <div class="flex items-center justify-between">
+        <h3 id="auth-modal-title" class="text-base font-extrabold text-white">Acesso à Conta</h3>
+        <button onclick="closeAuthModal()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white">✕</button>
+      </div>
+
+      <!-- Tabs: Entrar / Criar Conta -->
+      <div id="auth-guest-view" class="space-y-4">
+        <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-[#0D0E11] border border-white/10">
+          <button type="button" id="tab-login-btn" onclick="switchAuthTab('login')" class="py-2 rounded-lg gold-gradient text-[#0D0E11] text-xs font-extrabold">Entrar</button>
+          <button type="button" id="tab-register-btn" onclick="switchAuthTab('register')" class="py-2 rounded-lg text-slate-300 text-xs font-bold">Criar Conta</button>
+        </div>
+
+        <!-- Login Form (Aceita Usuário/Nome OU Telefone) -->
+        <form id="form-login" onsubmit="handleUnifiedLogin(event)" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Usuário, Nome ou Telefone</label>
+            <input type="text" id="login-identifier" required placeholder="Ex: joao.silva ou (51) 99999-9999" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Senha</label>
+            <input type="password" id="login-password" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+          </div>
+          <div class="flex items-center justify-between text-[11px]">
+            <span class="text-slate-400">Acesso Cliente ou Administrador/Supervisor</span>
+            <button type="button" onclick="openPasswordRecovery()" class="text-[#F3D478] font-bold hover:underline">Esqueci minha senha</button>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Entrar no Sistema</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="form-register" onsubmit="handleUserRegister(event)" class="hidden space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Nome Completo *</label>
+            <input type="text" id="reg-name" required placeholder="Seu nome completo" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Usuário para Login *</label>
+              <input type="text" id="reg-username" required placeholder="Ex: carlos2026" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Telefone WhatsApp *</label>
+              <input type="tel" id="reg-phone" required placeholder="(51) 99999-9999" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-300 mb-1">Crie uma Senha *</label>
+            <input type="password" id="reg-password" required minlength="4" placeholder="Mínimo 4 caracteres" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0D0E11] border border-white/15 text-sm text-white focus:outline-none focus:border-[#D4AF37]" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Veículo Principal</label>
+              <input type="text" id="reg-car" placeholder="Ex: T-Cross / Placa" class="w-full px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white focus:outline-none focus:border-[#D4AF37]" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-300 mb-1">Endereço Padrão</label>
+              <input type="text" id="reg-address" placeholder="Rua e número" class="w-full px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white focus:outline-none focus:border-[#D4AF37]" />
+            </div>
+          </div>
+          <button type="submit" class="w-full py-3 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Criar Conta e Salvar na Nuvem</button>
+        </form>
+
+        <!-- Password Recovery View -->
+        <div id="form-recovery" class="hidden space-y-3 border-t border-white/10 pt-3">
+          <p class="text-xs text-slate-300">Informe o telefone cadastrado para receber o código de confirmação via WhatsApp:</p>
+          <div class="flex gap-2">
+            <input type="tel" id="rec-phone" placeholder="(51) 98537-7892" class="flex-1 px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white" />
+            <button type="button" onclick="sendRecoveryCode()" class="px-3 py-2 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Enviar Código</button>
+          </div>
+          <div id="rec-step2" class="hidden space-y-2.5">
+            <p id="rec-sent-info" class="text-[11px] text-emerald-400 font-semibold"></p>
+            <input type="text" id="rec-code-input" placeholder="Código de 6 dígitos" class="w-full px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white" />
+            <input type="password" id="rec-new-pass" placeholder="Nova senha" class="w-full px-3 py-2 rounded-xl bg-[#0D0E11] border border-white/15 text-xs text-white" />
+            <button type="button" onclick="confirmPasswordRecovery()" class="w-full py-2.5 rounded-xl bg-emerald-500 text-white text-xs font-extrabold">Redefinir Senha</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logged Customer Profile View -->
+      <div id="auth-customer-view" class="hidden space-y-4">
+        <div class="p-3.5 rounded-2xl bg-[#0D0E11] border border-white/10 space-y-1 text-xs">
+          <p class="text-slate-400">Cliente:</p>
+          <p id="profile-name" class="text-sm font-bold text-white"></p>
+          <p id="profile-username" class="text-slate-300"></p>
+          <p id="profile-phone" class="text-[#F3D478]"></p>
+          <p id="profile-car" class="text-slate-300"></p>
+          <p id="profile-address" class="text-slate-400"></p>
+        </div>
+
+        <div class="space-y-2">
+          <h4 class="text-xs font-extrabold uppercase tracking-wider text-[#F3D478]">Meus Agendamentos</h4>
+          <div id="customer-bookings-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        </div>
+
+        <button type="button" onclick="logoutCurrentUser()" class="w-full py-2.5 rounded-xl bg-red-500/15 border border-red-500/35 text-red-300 text-xs font-bold">Encerrar Sessão</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN / SUPERVISOR DASHBOARD MODAL -->
+  <div id="admin-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-3">
+    <div class="card-glass w-full max-w-2xl rounded-3xl p-5 space-y-4 max-h-[92vh] overflow-y-auto border border-[#D4AF37]/50">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-[#D4AF37]">Painel de Gestão NGRA</span>
+          <h3 id="admin-welcome-title" class="text-base font-extrabold text-white">Administração</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="logoutCurrentUser(); closeAdminModal();" class="px-3 py-1.5 rounded-lg bg-red-500/15 text-red-300 text-xs font-bold">Sair</button>
+          <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-white/5 text-slate-400 hover:text-white">✕</button>
+        </div>
+      </div>
+
+      <!-- Admin Navigation Tabs -->
+      <div class="grid grid-cols-4 gap-1.5 p-1 rounded-xl bg-[#0D0E11] border border-white/10 text-[11px] font-bold">
+        <button type="button" onclick="switchAdminTab('bookings')" id="adm-tab-bookings" class="py-2 rounded-lg gold-gradient text-[#0D0E11]">Agenda</button>
+        <button type="button" onclick="switchAdminTab('services')" id="adm-tab-services" class="py-2 rounded-lg text-slate-300">Serviços</button>
+        <button type="button" onclick="switchAdminTab('supervisors')" id="adm-tab-supervisors" class="py-2 rounded-lg text-slate-300">Supervisores</button>
+        <button type="button" onclick="switchAdminTab('settings')" id="adm-tab-settings" class="py-2 rounded-lg text-slate-300">Taxas/Senha</button>
+      </div>
+
+      <!-- Tab 1: Bookings -->
+      <div id="adm-panel-bookings" class="space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-300">Agendamentos Registrados</span>
+          <span id="adm-bookings-count" class="text-xs font-bold text-[#F3D478]">0</span>
+        </div>
+        <div id="adm-bookings-list" class="space-y-2.5 max-h-80 overflow-y-auto"></div>
+      </div>
+
+      <!-- Tab 2: Services & Prices -->
+      <div id="adm-panel-services" class="hidden space-y-3">
+        <div id="adm-services-list" class="space-y-2.5 max-h-64 overflow-y-auto"></div>
+        <form onsubmit="adminAddService(event)" class="p-3 rounded-2xl bg-[#0D0E11] border border-white/10 space-y-2">
+          <p class="text-xs font-bold text-[#F3D478]">+ Adicionar Novo Serviço</p>
+          <input type="text" id="new-srv-name" required placeholder="Nome do serviço" class="w-full px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+          <input type="text" id="new-srv-desc" placeholder="Descrição curta" class="w-full px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+          <div class="grid grid-cols-3 gap-2">
+            <input type="number" step="0.01" id="new-srv-moto" required placeholder="Moto (R$)" class="px-2.5 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+            <input type="number" step="0.01" id="new-srv-hatch" required placeholder="Hatch (R$)" class="px-2.5 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+            <input type="number" step="0.01" id="new-srv-suv" required placeholder="SUV (R$)" class="px-2.5 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Salvar Serviço</button>
+        </form>
+      </div>
+
+      <!-- Tab 3: Network Supervisors -->
+      <div id="adm-panel-supervisors" class="hidden space-y-3">
+        <p class="text-xs text-slate-400">Cadastre supervisores de cada unidade (podem acessar usando o nome ou telefone cadastrado).</p>
+        <div id="adm-supervisors-list" class="space-y-2 max-h-48 overflow-y-auto"></div>
+        <form onsubmit="adminAddSupervisor(event)" class="p-3 rounded-2xl bg-[#0D0E11] border border-white/10 space-y-2">
+          <p class="text-xs font-bold text-[#F3D478]">+ Cadastrar Supervisor</p>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="sup-name" required placeholder="Nome / Usuário do supervisor" class="px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+            <input type="text" id="sup-unit" required placeholder="Unidade (Ex: Rubem Berta)" class="px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="tel" id="sup-phone" required placeholder="Telefone WhatsApp" class="px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+            <input type="text" id="sup-pass" required value="1234" placeholder="Senha inicial" class="px-3 py-2 rounded-lg bg-[#16181D] border border-white/10 text-xs text-white" />
+          </div>
+          <button type="submit" class="w-full py-2.5 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Cadastrar Supervisor</button>
+        </form>
+      </div>
+
+      <!-- Tab 4: Km Rate & Master Password -->
+      <div id="adm-panel-settings" class="hidden space-y-3">
+        <div class="p-3.5 rounded-2xl bg-[#0D0E11] border border-white/10 space-y-2">
+          <label class="block text-xs font-bold text-slate-300">Taxa do Leva e Traz por Km (Ida e Volta)</label>
+          <div class="flex gap-2">
+            <input type="number" step="0.10" id="adm-km-rate" class="flex-1 px-3 py-2 rounded-xl bg-[#16181D] border border-white/15 text-sm text-white" />
+            <button type="button" onclick="saveKmRate()" class="px-4 py-2 rounded-xl gold-gradient text-[#0D0E11] text-xs font-extrabold">Salvar Taxa</button>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-[#0D0E11] border border-white/10 space-y-2">
+          <label class="block text-xs font-bold text-slate-300">Alterar Senha Master ADM</label>
+          <input type="password" id="adm-new-master-pass" placeholder="Nova senha Master" class="w-full px-3 py-2 rounded-xl bg-[#16181D] border border-white/15 text-xs text-white" />
+          <button type="button" onclick="updateMasterPassword()" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-bold">Atualizar Senha Master</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+
+  <script>
+    // =========================================================================
+    // 1. FIREBASE CONFIGURATION (PROJETO: ngra-lavagem)
+    // =========================================================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyC2bgcAku5yPHE3voMKH0r-RkErHROfvQg",
+      authDomain: "ngra-lavagem.firebaseapp.com",
+      projectId: "ngra-lavagem",
+      storageBucket: "ngra-lavagem.firebasestorage.app",
+      messagingSenderId: "108275147820",
+      appId: "1:108275147820:web:b169b7da1b636ed6fe5d89",
+      measurementId: "G-BDFX2Q3VVT"
+    };
+
+    let db = null;
+    try {
+      const app = firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      if (typeof firebase.analytics === 'function') {
+        firebase.analytics();
+      }
+    } catch (err) {
+      console.warn('Fallback localStorage ativo:', err);
+    }
+
+    // =========================================================================
+    // 2. DEVICE DETECTION (DESKTOP VS MOBILE)
+    // =========================================================================
+    function detectDeviceEnvironment() {
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth < 1024;
+      const isMobile = isMobileUA || isSmallScreen;
+
+      document.body.dataset.device = isMobile ? 'mobile' : 'desktop';
+      const badge = document.getElementById('device-mode-badge');
+      if (badge) {
+        badge.textContent = isMobile ? '📱 Modo Mobile' : '🖥️ Modo Desktop';
+      }
+      return isMobile;
+    }
+
+    window.addEventListener('resize', detectDeviceEnvironment);
+
+    // =========================================================================
+    // 3. CONSTANTS & INITIAL STATE
+    // =========================================================================
+    const STORE_WHATSAPP = '5551985377892';
+    const MASTER_ADMIN_PHONE = '51985377892';
+    const BASE_ADDRESS = 'Rua D Vl Amazonia, 244 - Rubem Berta, Porto Alegre - RS';
+    const BASE_COORDS = { lat: -30.0138, lng: -51.1165 };
+
+    const TIME_SLOTS = [
+      '08:00', '09:00', '10:00', '11:00',
+      '13:30', '14:30', '15:30', '16:30', '17:30'
+    ];
+
+    const DEFAULT_SERVICES = [
+      {
+        id: 'srv-tradicional',
+        name: 'Lavagem Tradicional Completa',
+        desc: 'Lavagem externa detalhada, aspiração interna, painel e pretinho nos pneus.',
+        prices: { moto: 39.00, hatch: 59.90, suv: 79.90 }
+      },
+      {
+        id: 'srv-cera',
+        name: 'Lavagem + Cera Protetora',
+        desc: 'Limpeza completa com aplicação de cera de carnaúba de alto brilho e repelência.',
+        prices: { moto: 55.00, hatch: 89.90, suv: 109.90 }
+      },
+      {
+        id: 'srv-higienizacao',
+        name: 'Higienização Interna Profunda',
+        desc: 'Limpeza bactericida de bancos, teto, carpetes, painel e dutos de ar.',
+        prices: { moto: 79.00, hatch: 189.90, suv: 229.90 }
+      },
+      {
+        id: 'srv-motor',
+        name: 'Lavagem Técnica de Motor',
+        desc: 'Desengraxe seguro com proteção de componentes eletrônicos e verniz de motor.',
+        prices: { moto: 45.00, hatch: 79.90, suv: 99.90 }
+      },
+      {
+        id: 'srv-ceramica',
+        name: 'Proteção Cerâmica (Vitrificação)',
+        desc: 'Descontaminação de pintura, polimento técnico e coating cerâmico de longa duração.',
+        prices: { moto: 290.00, hatch: 590.00, suv: 790.00 }
+      }
+    ];
+
+    const POA_GEO_FALLBACK = [
+      { keys: ['assis brasil'], lat: -30.0085, lng: -51.1322, label: 'Av. Assis Brasil - Sarandi / Passo d\'Areia, Porto Alegre - RS' },
+      { keys: ['baltazar', 'oliveira garcia'], lat: -30.0175, lng: -51.1230, label: 'Av. Baltazar de Oliveira Garcia - Rubem Berta, Porto Alegre - RS' },
+      { keys: ['protasio', 'protásio'], lat: -30.0398, lng: -51.1585, label: 'Av. Protásio Alves - Petrópolis / Alto Petrópolis, Porto Alegre - RS' },
+      { keys: ['sertorio', 'sertório'], lat: -30.0021, lng: -51.1568, label: 'Av. Sertório - Sarandi, Porto Alegre - RS' },
+      { keys: ['farrapos'], lat: -30.0125, lng: -51.2015, label: 'Av. Farrapos - Navegantes, Porto Alegre - RS' },
+      { keys: ['ipiranga'], lat: -30.0532, lng: -51.1854, label: 'Av. Ipiranga - Jardim Botânico, Porto Alegre - RS' },
+      { keys: ['alvorada', 'getulio vargas'], lat: -29.9912, lng: -51.0815, label: 'Av. Pres. Getúlio Vargas - Alvorada - RS' },
+      { keys: ['gravatai', 'gravataí'], lat: -29.9432, lng: -50.9921, label: 'Centro - Gravataí - RS' },
+      { keys: ['canoas'], lat: -29.9189, lng: -51.1782, label: 'Centro - Canoas - RS' },
+      { keys: ['viamao', 'viamão'], lat: -30.0811, lng: -51.0233, label: 'Centro - Viamão - RS' }
+    ];
+
+    let state = {
+      step: 1,
+      vehicle: 'hatch',
+      selectedServices: ['srv-tradicional'],
+      date: '',
+      time: '',
+      deliveryMode: 'store',
+      pickupAddress: '',
+      pickupDistanceKm: 0,
+      pickupFee: 0,
+      pickupResolvedLabel: '',
+      pickupCoords: null,
+      kmRate: 2.50,
+      services: JSON.parse(localStorage.getItem('ngra_services')) || DEFAULT_SERVICES,
+      bookings: JSON.parse(localStorage.getItem('ngra_bookings')) || [],
+      users: JSON.parse(localStorage.getItem('ngra_users')) || [],
+      supervisors: JSON.parse(localStorage.getItem('ngra_supervisors')) || [],
+      masterPassword: localStorage.getItem('ngra_master_pass') || '1234',
+      currentUser: JSON.parse(localStorage.getItem('ngra_session')) || null,
+      recoveryTarget: null,
+      recoveryCode: null
+    };
+
+    // =========================================================================
+    // 4. FIRESTORE REAL-TIME SYNC
+    // =========================================================================
+    function initCloudSync() {
+      if (!db) return;
+
+      db.collection('bookings').onSnapshot(snap => {
+        const list = [];
+        snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+        list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        state.bookings = list;
+        localStorage.setItem('ngra_bookings', JSON.stringify(list));
+        if (state.step === 3) renderTimeSlots();
+        renderAdminBookings();
+      }, err => console.warn('Firestore bookings:', err));
+
+      db.collection('users').onSnapshot(snap => {
+        const list = [];
+        snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+        state.users = list;
+        localStorage.setItem('ngra_users', JSON.stringify(list));
+      }, err => console.warn('Firestore users:', err));
+
+      db.collection('supervisors').onSnapshot(snap => {
+        const list = [];
+        snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+        state.supervisors = list;
+        localStorage.setItem('ngra_supervisors', JSON.stringify(list));
+        renderAdminSupervisors();
+      }, err => console.warn('Firestore supervisors:', err));
+
+      db.collection('config').doc('main').onSnapshot(doc => {
+        if (doc.exists) {
+          const data = doc.data();
+          if (Array.isArray(data.services) && data.services.length) {
+            state.services = data.services;
+            localStorage.setItem('ngra_services', JSON.stringify(data.services));
+            renderServices();
+            renderAdminServices();
+            updateTotalsUI();
+          }
+          if (typeof data.kmRate === 'number') {
+            state.kmRate = data.kmRate;
+            const rateInput = document.getElementById('adm-km-rate');
+            if (rateInput) rateInput.value = state.kmRate.toFixed(2);
+          }
+          if (data.masterPassword) {
+            state.masterPassword = data.masterPassword;
+            localStorage.setItem('ngra_master_pass', data.masterPassword);
+          }
+        }
+      }, err => console.warn('Firestore config:', err));
+    }
+
+    async function syncConfigToCloud() {
+      localStorage.setItem('ngra_services', JSON.stringify(state.services));
+      localStorage.setItem('ngra_master_pass', state.masterPassword);
+      if (!db) return;
+      try {
+        await db.collection('config').doc('main').set({
+          services: state.services,
+          kmRate: state.kmRate,
+          masterPassword: state.masterPassword
+        }, { merge: true });
+      } catch (e) {
+        console.warn('Erro ao salvar config na nuvem:', e);
+      }
+    }
+
+    // =========================================================================
+    // 5. HELPERS & FORMATTING
+    // =========================================================================
+    function formatBRL(value) {
+      return Number(value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function normalizePhone(raw) {
+      return String(raw || '').replace(/\D/g, '');
+    }
+
+    function normalizeTextKey(raw) {
+      return String(raw || '').trim().toLowerCase();
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.classList.add('hidden'), 3400);
+    }
+
+    function getVehicleLabel(v) {
+      if (v === 'moto') return 'Moto';
+      if (v === 'suv') return 'SUV / Pick-up';
+      return 'Hatch / Sedan';
+    }
+
+    function calculateServicesSubtotal() {
+      return state.selectedServices.reduce((acc, id) => {
+        const srv = state.services.find(s => s.id === id);
+        return acc + (srv ? Number(srv.prices[state.vehicle] || 0) : 0);
+      }, 0);
+    }
+
+    function calculateGrandTotal() {
+      const sub = calculateServicesSubtotal();
+      const fee = state.deliveryMode === 'pickup' ? Number(state.pickupFee || 0) : 0;
+      return sub + fee;
+    }
+
+    function updateTotalsUI() {
+      const total = calculateGrandTotal();
+      document.getElementById('footer-total').textContent = formatBRL(total);
+      const desktopTotal = document.getElementById('desktop-total');
+      if (desktopTotal) desktopTotal.textContent = formatBRL(total);
+      const sumTotal = document.getElementById('summary-total');
+      if (sumTotal) sumTotal.textContent = formatBRL(total);
+      renderDesktopSidebarSummary();
+    }
+
+    function renderDesktopSidebarSummary() {
+      const container = document.getElementById('desktop-summary-content');
+      if (!container) return;
+
+      const selectedObjs = state.services.filter(s => state.selectedServices.includes(s.id));
+      const formattedDate = state.date ? state.date.split('-').reverse().join('/') : 'A definir';
+      const formattedTime = state.time || 'A definir';
+
+      const srvList = selectedObjs.length
+        ? selectedObjs.map(s => `<div class="flex justify-between"><span>• ${s.name}</span><strong class="text-white">${formatBRL(s.prices[state.vehicle])}</strong></div>`).join('')
+        : '<div class="text-slate-400">Nenhum serviço selecionado</div>';
+
+      const deliveryLine = state.deliveryMode === 'pickup'
+        ? `<div class="flex justify-between text-[#F3D478]"><span>🚗 Leva e Traz (${state.pickupDistanceKm} km)</span><strong>${formatBRL(state.pickupFee)}</strong></div>`
+        : `<div class="flex justify-between text-emerald-400"><span>🏪 Levar até a lavagem</span><strong>Grátis</strong></div>`;
+
+      container.innerHTML = `
+        <div class="flex justify-between"><span>Veículo:</span><strong class="text-white">${getVehicleLabel(state.vehicle)}</strong></div>
+        <div class="flex justify-between"><span>Data / Hora:</span><strong class="text-white">${formattedDate} • ${formattedTime}</strong></div>
+        <div class="pt-2 border-t border-white/10 space-y-1">${srvList}</div>
+        <div class="pt-2 border-t border-white/10">${deliveryLine}</div>
+      `;
+    }
+
+    // =========================================================================
+    // 6. STEP NAVIGATION & RENDERING
+    // =========================================================================
+    function setupDefaultDate() {
+      const input = document.getElementById('booking-date');
+      const now = new Date();
+      if (now.getDay() === 0) now.setDate(now.getDate() + 1);
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const iso = `${yyyy}-${mm}-${dd}`;
+      input.min = iso;
+      input.value = iso;
+      state.date = iso;
+    }
+
+    function selectVehicle(type) {
+      state.vehicle = type;
+      document.querySelectorAll('.vehicle-card').forEach(card => {
+        card.classList.remove('selected-card');
+        const dot = card.querySelector('.check-dot');
+        dot.classList.remove('bg-[#D4AF37]', 'text-[#0D0E11]', 'font-bold');
+        dot.classList.add('border', 'border-white/20', 'text-[#D4AF37]');
+      });
+
+      const active = document.getElementById(`veh-${type}`);
+      active.classList.add('selected-card');
+      const activeDot = active.querySelector('.check-dot');
+      activeDot.classList.remove('border', 'border-white/20', 'text-[#D4AF37]');
+      activeDot.classList.add('bg-[#D4AF37]', 'text-[#0D0E11]', 'font-bold');
+
+      document.getElementById('step2-veh-label').textContent = getVehicleLabel(type);
+      renderServices();
+      updateTotalsUI();
+    }
+
+    function renderServices() {
+      const container = document.getElementById('services-list');
+      container.innerHTML = '';
+
+      state.services.forEach(srv => {
+        const isSelected = state.selectedServices.includes(srv.id);
+        const price = Number(srv.prices[state.vehicle] || 0);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.onclick = () => toggleService(srv.id);
+        btn.className = `w-full card-glass rounded-2xl p-4 text-left flex items-start justify-between gap-3 transition ${isSelected ? 'selected-card' : 'hover:border-[#D4AF37]/40'}`;
+        btn.innerHTML = `
+          <div class="space-y-1">
+            <h3 class="font-bold text-sm text-white">${srv.name}</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">${srv.desc || ''}</p>
+            <span class="inline-block text-sm font-extrabold text-[#F3D478] pt-1">${formatBRL(price)}</span>
+          </div>
+          <div class="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 ${isSelected ? 'bg-[#D4AF37] text-[#0D0E11] font-extrabold' : 'border border-white/20 text-transparent'}">✓</div>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function toggleService(id) {
+      if (state.selectedServices.includes(id)) {
+        state.selectedServices = state.selectedServices.filter(item => item !== id);
+      } else {
+        state.selectedServices.push(id);
+      }
+      renderServices();
+      updateTotalsUI();
+    }
+
+    function handleDateChange() {
+      const input = document.getElementById('booking-date');
+      const warn = document.getElementById('sunday-warning');
+      if (!input.value) return;
+
+      const [y, m, d] = input.value.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      if (dt.getDay() === 0) {
+        warn.classList.remove('hidden');
+        state.date = '';
+        state.time = '';
+        renderTimeSlots();
+        updateTotalsUI();
+        return;
+      }
+
+      warn.classList.add('hidden');
+      state.date = input.value;
+      state.time = '';
+      renderTimeSlots();
+      updateTotalsUI();
+    }
+
+    function renderTimeSlots() {
+      const grid = document.getElementById('time-slots-grid');
+      grid.innerHTML = '';
+
+      if (!state.date) {
+        grid.innerHTML = '<p class="col-span-3 text-xs text-slate-400 text-center py-3">Selecione uma data válida acima.</p>';
+        return;
+      }
+
+      const bookedTimes = state.bookings
+        .filter(b => b.date === state.date && b.status !== 'cancelado')
+        .map(b => b.time);
+
+      TIME_SLOTS.forEach(slot => {
+        const isBooked = bookedTimes.includes(slot);
+        const isSelected = state.time === slot && !isBooked;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+
+        if (isBooked) {
+          btn.disabled = true;
+          btn.className = 'slot-booked py-2.5 px-2 rounded-xl text-center transition';
+          btn.innerHTML = `<span class="block text-xs font-extrabold">${slot}</span><span class="block text-[10px] font-bold uppercase">Ocupado</span>`;
+        } else {
+          btn.onclick = () => {
+            state.time = slot;
+            renderTimeSlots();
+            updateTotalsUI();
+          };
+          btn.className = isSelected
+            ? 'selected-card py-2.5 px-2 rounded-xl text-center transition'
+            : 'bg-[#0D0E11] border border-white/10 hover:border-[#D4AF37]/50 py-2.5 px-2 rounded-xl text-center transition';
+          btn.innerHTML = `<span class="block text-xs font-extrabold ${isSelected ? 'text-[#F3D478]' : 'text-white'}">${slot}</span><span class="block text-[10px] text-emerald-400 font-semibold">Livre</span>`;
+        }
+        grid.appendChild(btn);
+      });
+    }
+
+    // =========================================================================
+    // 7. DELIVERY MODE & GEOGRAPHIC ROUTE CALCULATION
+    // =========================================================================
+    function setDeliveryMode(mode) {
+      state.deliveryMode = mode;
+
+      const sBtn = document.getElementById('mode-store-btn');
+      const pBtn = document.getElementById('mode-pickup-btn');
+      const sNav = document.getElementById('store-nav-box');
+      const pBox = document.getElementById('pickup-address-box');
+
+      const s4Store = document.getElementById('step4-mode-store');
+      const s4Pick = document.getElementById('step4-mode-pickup');
+      const s4Links = document.getElementById('step4-store-links');
+      const s4Box = document.getElementById('step4-pickup-box');
+
+      if (mode === 'store') {
+        sBtn.classList.add('selected-card');
+        pBtn.classList.remove('selected-card');
+        sNav.classList.remove('hidden');
+        pBox.classList.add('hidden');
+
+        s4Store.classList.add('selected-card');
+        s4Pick.classList.remove('selected-card');
+        s4Links.classList.remove('hidden');
+        s4Box.classList.add('hidden');
+      } else {
+        pBtn.classList.add('selected-card');
+        sBtn.classList.remove('selected-card');
+        pBox.classList.remove('hidden');
+        sNav.classList.add('hidden');
+
+        s4Pick.classList.add('selected-card');
+        s4Store.classList.remove('selected-card');
+        s4Box.classList.remove('hidden');
+        s4Links.classList.add('hidden');
+
+        const mainInp = document.getElementById('pickup-address-input');
+        const s4Inp = document.getElementById('step4-pickup-input');
+        if (mainInp.value && !s4Inp.value) s4Inp.value = mainInp.value;
+        if (s4Inp.value && !mainInp.value) mainInp.value = s4Inp.value;
+      }
+
+      updateTotalsUI();
+      if (state.step === 4) renderSummary();
+    }
+
+    function syncPickupInputFromStep4() {
+      const val = document.getElementById('step4-pickup-input').value;
+      document.getElementById('pickup-address-input').value = val;
+      debouncedCalculatePickup();
+    }
+
+    function debouncedCalculatePickup() {
+      clearTimeout(window._geoTimer);
+      window._geoTimer = setTimeout(() => {
+        const val = document.getElementById('pickup-address-input').value.trim();
+        if (val.length >= 5) calculatePickupFee();
+      }, 650);
+    }
+
+    function haversineKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    async function calculatePickupFee() {
+      const rawAddress = document.getElementById('pickup-address-input').value.trim();
+      document.getElementById('step4-pickup-input').value = rawAddress;
+
+      if (!rawAddress) {
+        showToast('Digite o endereço completo com rua e número.');
+        return;
+      }
+
+      state.pickupAddress = rawAddress;
+      const resBox = document.getElementById('pickup-calc-result');
+      const s4Box = document.getElementById('step4-pickup-result');
+      resBox.classList.remove('hidden');
+      resBox.innerHTML = '<span class="text-slate-400">Calculando coordenadas e rota exata...</span>';
+
+      let targetLat = null;
+      let targetLng = null;
+      let resolvedLabel = rawAddress;
+      let oneWayKm = null;
+
+      try {
+        const query = encodeURIComponent(`${rawAddress}, Porto Alegre, RS, Brasil`);
+        const geoResp = await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${query}`);
+        const geoData = await geoResp.json();
+
+        if (Array.isArray(geoData) && geoData.length > 0) {
+          targetLat = parseFloat(geoData[0].lat);
+          targetLng = parseFloat(geoData[0].lon);
+          resolvedLabel = geoData[0].display_name.split(',').slice(0, 3).join(',');
+        }
+      } catch (e) {
+        console.warn('Geocoding fallback:', e);
+      }
+
+      if (targetLat === null) {
+        const lower = rawAddress.toLowerCase();
+        const found = POA_GEO_FALLBACK.find(item => item.keys.some(k => lower.includes(k)));
+        const numMatch = rawAddress.match(/\d+/);
+        const numOffset = numMatch ? (parseInt(numMatch[0], 10) % 1000) * 0.000012 : 0.004;
+
+        if (found) {
+          targetLat = found.lat + numOffset;
+          targetLng = found.lng - numOffset;
+          resolvedLabel = `${found.label} (${rawAddress})`;
+        } else {
+          targetLat = BASE_COORDS.lat - 0.032 - numOffset;
+          targetLng = BASE_COORDS.lng - 0.028 + numOffset;
+          resolvedLabel = `${rawAddress} - Porto Alegre / Região`;
+        }
+      }
+
+      try {
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${BASE_COORDS.lng},${BASE_COORDS.lat};${targetLng},${targetLat}?overview=false`;
+        const routeResp = await fetch(osrmUrl);
+        const routeData = await routeResp.json();
+        if (routeData.routes && routeData.routes.length > 0) {
+          oneWayKm = routeData.routes[0].distance / 1000;
+        }
+      } catch (e) {
+        console.warn('OSRM fallback:', e);
+      }
+
+      if (oneWayKm === null) {
+        oneWayKm = Math.max(1.8, haversineKm(BASE_COORDS.lat, BASE_COORDS.lng, targetLat, targetLng) * 1.32);
+      }
+
+      const roundTripKm = Number((oneWayKm * 2).toFixed(1));
+      const fee = Math.max(10, Number((roundTripKm * state.kmRate).toFixed(2)));
+
+      state.pickupDistanceKm = roundTripKm;
+      state.pickupFee = fee;
+      state.pickupResolvedLabel = resolvedLabel;
+      state.pickupCoords = { lat: targetLat.toFixed(5), lng: targetLng.toFixed(5) };
+
+      const mapsRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(BASE_ADDRESS)}&destination=${targetLat},${targetLng}&travelmode=driving`;
+
+      resBox.innerHTML = `
+        <div class="text-white font-semibold">📍 ${resolvedLabel}</div>
+        <div class="text-[11px] text-slate-400">Lat: ${state.pickupCoords.lat} | Lng: ${state.pickupCoords.lng}</div>
+        <div class="flex items-center justify-between pt-1">
+          <span class="text-[#F3D478] font-bold">Distância ida/volta: ${roundTripKm} km • Taxa: ${formatBRL(fee)}</span>
+          <a href="${mapsRouteUrl}" target="_blank" rel="noopener" class="text-blue-400 underline font-semibold">Ver rota</a>
+        </div>
+      `;
+
+      s4Box.classList.remove('hidden');
+      s4Box.textContent = `📍 ${resolvedLabel} • ${roundTripKm} km (ida/volta) = ${formatBRL(fee)}`;
+
+      updateTotalsUI();
+      if (state.step === 4) renderSummary();
+    }
+
+    // =========================================================================
+    // 8. STEP TRANSITIONS & SUMMARY
+    // =========================================================================
+    function updateStepperUI() {
+      for (let i = 1; i <= 4; i++) {
+        const bar = document.getElementById(`bar-${i}`);
+        const lbl = document.getElementById(`label-${i}`);
+        if (i <= state.step) {
+          bar.classList.remove('bg-white/10');
+          bar.classList.add('bg-[#D4AF37]');
+          if (lbl) {
+            lbl.classList.remove('text-slate-400');
+            lbl.classList.add('text-[#F3D478]');
+          }
+        } else {
+          bar.classList.remove('bg-[#D4AF37]');
+          bar.classList.add('bg-white/10');
+          if (lbl) {
+            lbl.classList.remove('text-[#F3D478]');
+            lbl.classList.add('text-slate-400');
+          }
+        }
+      }
+
+      for (let s = 1; s <= 4; s++) {
+        document.getElementById(`step-${s}`).classList.toggle('hidden', s !== state.step);
+      }
+      document.getElementById('step-success').classList.add('hidden');
+      document.getElementById('footer-nav').classList.remove('hidden');
+      document.getElementById('desktop-nav-buttons').classList.remove('hidden');
+
+      const stepNum = document.getElementById('desktop-step-num');
+      if (stepNum) stepNum.textContent = state.step;
+
+      const isFirst = state.step === 1;
+      const nextText = state.step === 4 ? 'Confirmar e Enviar WhatsApp ✓' : 'Continuar →';
+
+      document.getElementById('btn-prev').classList.toggle('hidden', isFirst);
+      document.getElementById('btn-next').textContent = nextText;
+
+      const dPrev = document.getElementById('desktop-btn-prev');
+      const dNext = document.getElementById('desktop-btn-next');
+      if (dPrev) dPrev.classList.toggle('hidden', isFirst);
+      if (dNext) dNext.textContent = nextText;
+
+      renderDesktopSidebarSummary();
+    }
+
+    async function nextStep() {
+      if (state.step === 1) {
+        state.step = 2;
+        renderServices();
+        updateStepperUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (state.step === 2) {
+        if (state.selectedServices.length === 0) {
+          showToast('Selecione pelo menos 1 serviço para continuar.');
+          return;
+        }
+        state.step = 3;
+        renderTimeSlots();
+        updateStepperUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (state.step === 3) {
+        if (!state.date) {
+          showToast('Selecione uma data válida (Segunda a Sábado).');
+          return;
+        }
+        if (!state.time) {
+          showToast('Escolha um horário livre na grade.');
+          return;
+        }
+        if (state.deliveryMode === 'pickup') {
+          const addr = document.getElementById('pickup-address-input').value.trim();
+          if (!addr) {
+            showToast('Informe o endereço para o Leva e Traz.');
+            return;
+          }
+          if (state.pickupFee === 0) {
+            await calculatePickupFee();
+          }
+        }
+
+        prefillCustomerFields();
+        state.step = 4;
+        renderSummary();
+        updateStepperUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+
+      if (state.step === 4) {
+        await finalizeBooking();
+      }
+    }
+
+    function prevStep() {
+      if (state.step > 1) {
+        state.step -= 1;
+        updateStepperUI();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    function prefillCustomerFields() {
+      if (!state.currentUser || state.currentUser.role !== 'customer') return;
+      const u = state.currentUser;
+      if (!document.getElementById('cust-name').value) document.getElementById('cust-name').value = u.name || '';
+      if (!document.getElementById('cust-phone').value) document.getElementById('cust-phone').value = u.phone || '';
+      if (!document.getElementById('cust-car').value) document.getElementById('cust-car').value = u.car || '';
+      if (u.address && !document.getElementById('pickup-address-input').value) {
+        document.getElementById('pickup-address-input').value = u.address;
+        document.getElementById('step4-pickup-input').value = u.address;
+      }
+    }
+
+    function renderSummary() {
+      const selectedObjs = state.services.filter(s => state.selectedServices.includes(s.id));
+      const formattedDate = state.date ? state.date.split('-').reverse().join('/') : '-';
+      const servicesHtml = selectedObjs.map(s => `
+        <div class="flex justify-between">
+          <span>• ${s.name}</span>
+          <span class="font-semibold text-white">${formatBRL(s.prices[state.vehicle])}</span>
+        </div>
+      `).join('');
+
+      const deliveryHtml = state.deliveryMode === 'pickup'
+        ? `<div class="flex justify-between text-[#F3D478]"><span>🚗 Leva e Traz (${state.pickupDistanceKm} km)</span><span>${formatBRL(state.pickupFee)}</span></div>
+           <div class="text-[11px] text-slate-400">Local: ${state.pickupResolvedLabel || state.pickupAddress}</div>`
+        : `<div class="flex justify-between text-emerald-400"><span>🏪 Entrega na Lavagem (Rubem Berta)</span><span>Grátis</span></div>`;
+
+      document.getElementById('summary-content').innerHTML = `
+        <div class="flex justify-between"><span>Veículo:</span><strong class="text-white">${getVehicleLabel(state.vehicle)}</strong></div>
+        <div class="flex justify-between"><span>Data e Horário:</span><strong class="text-white">${formattedDate} às ${state.time}</strong></div>
+        <div class="pt-1 border-t border-white/10 space-y-1">${servicesHtml}</div>
+        <div class="pt-1 border-t border-white/10 space-y-1">${deliveryHtml}</div>
+      `;
+      updateTotalsUI();
+    }
+
+    async function finalizeBooking() {
+      const name = document.getElementById('cust-name').value.trim();
+      const phone = document.getElementById('cust-phone').value.trim();
+      const car = document.getElementById('cust-car').value.trim();
+
+      if (!name || !phone) {
+        showToast('Preencha seu nome e WhatsApp para confirmar.');
+        return;
+      }
+
+      if (state.deliveryMode === 'pickup' && !document.getElementById('pickup-address-input').value.trim()) {
+        showToast('Informe o endereço para o Leva e Traz.');
+        return;
+      }
+
+      const alreadyTaken = state.bookings.some(
+        b => b.date === state.date && b.time === state.time && b.status !== 'cancelado'
+      );
+      if (alreadyTaken) {
+        showToast('Este horário acabou de ser reservado. Escolha outro horário.');
+        state.step = 3;
+        renderTimeSlots();
+        updateStepperUI();
+        return;
+      }
+
+      const selectedObjs = state.services.filter(s => state.selectedServices.includes(s.id));
+      const total = calculateGrandTotal();
+      const formattedDate = state.date.split('-').reverse().join('/');
+
+      const bookingRecord = {
+        customerName: name,
+        customerPhone: phone,
+        customerPhoneClean: normalizePhone(phone),
+        carModel: car || 'Não informado',
+        vehicleCategory: getVehicleLabel(state.vehicle),
+        services: selectedObjs.map(s => s.name),
+        date: state.date,
+        time: state.time,
+        deliveryMode: state.deliveryMode,
+        pickupAddress: state.deliveryMode === 'pickup' ? (state.pickupResolvedLabel || state.pickupAddress) : BASE_ADDRESS,
+        pickupFee: state.deliveryMode === 'pickup' ? state.pickupFee : 0,
+        total: total,
+        status: 'confirmado',
+        createdAt: Date.now()
+      };
+
+      if (db) {
+        try {
+          await db.collection('bookings').add(bookingRecord);
+        } catch (e) {
+          console.warn('Erro ao gravar agendamento no Firestore:', e);
+        }
+      } else {
+        state.bookings.unshift({ id: 'local-' + Date.now(), ...bookingRecord });
+        localStorage.setItem('ngra_bookings', JSON.stringify(state.bookings));
+      }
+
+      const msgLines = [
+        `*NOVO AGENDAMENTO - NGRA LAVAGEM AUTOMOTIVA* 🚗✨`,
+        ``,
+        `*Cliente:* ${name}`,
+        `*WhatsApp:* ${phone}`,
+        `*Veículo:* ${getVehicleLabel(state.vehicle)} (${car || 'Não informado'})`,
+        `*Data:* ${formattedDate} às *${state.time}*`,
+        `*Serviços:* ${selectedObjs.map(s => s.name).join(', ')}`,
+        state.deliveryMode === 'pickup'
+          ? `*Modalidade:* Leva e Traz (${bookingRecord.pickupAddress}) - Taxa: ${formatBRL(state.pickupFee)}`
+          : `*Modalidade:* Levar até a lavagem (Rua D Vl Amazonia, 244 - Rubem Berta)`,
+        `*Total:* *${formatBRL(total)}*`
+      ];
+
+      const waUrl = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(msgLines.join('\n'))}`;
+
+      for (let s = 1; s <= 4; s++) document.getElementById(`step-${s}`).classList.add('hidden');
+      document.getElementById('footer-nav').classList.add('hidden');
+      document.getElementById('desktop-nav-buttons').classList.add('hidden');
+      document.getElementById('step-success').classList.remove('hidden');
+
+      document.getElementById('success-receipt').innerHTML = `
+        <div><strong>Cliente:</strong> ${name}</div>
+        <div><strong>Data/Hora:</strong> ${formattedDate} às ${state.time}</div>
+        <div><strong>Veículo:</strong> ${getVehicleLabel(state.vehicle)} ${car ? `(${car})` : ''}</div>
+        <div><strong>Serviços:</strong> ${selectedObjs.map(s => s.name).join(', ')}</div>
+        <div><strong>Entrega:</strong> ${state.deliveryMode === 'pickup' ? `Leva e Traz (${formatBRL(state.pickupFee)})` : 'Na Lavagem (Rubem Berta)'}</div>
+        <div class="pt-1 border-t border-white/10 text-sm font-extrabold text-[#F3D478]">Total: ${formatBRL(total)}</div>
+      `;
+
+      document.getElementById('success-nav-links').classList.toggle('hidden', state.deliveryMode !== 'store');
+      document.getElementById('success-whatsapp-btn').href = waUrl;
+      window.open(waUrl, '_blank');
+    }
+
+    function resetBooking() {
+      state.step = 1;
+      state.time = '';
+      renderTimeSlots();
+      updateStepperUI();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // 9. UNIFIED AUTHENTICATION (LOGIN POR USUÁRIO/NOME OU TELEFONE)
+    // =========================================================================
+    function openAuthModal() {
+      if (state.currentUser && (state.currentUser.role === 'master' || state.currentUser.role === 'supervisor')) {
+        openAdminModal();
+        return;
+      }
+
+      document.getElementById('auth-modal').classList.remove('hidden');
+      if (state.currentUser && state.currentUser.role === 'customer') {
+        document.getElementById('auth-guest-view').classList.add('hidden');
+        document.getElementById('auth-customer-view').classList.remove('hidden');
+        document.getElementById('auth-modal-title').textContent = 'Minha Conta';
+        renderCustomerProfile();
+      } else {
+        document.getElementById('auth-guest-view').classList.remove('hidden');
+        document.getElementById('auth-customer-view').classList.add('hidden');
+        document.getElementById('auth-modal-title').textContent = 'Acesso à Conta';
+        switchAuthTab('login');
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById('auth-modal').classList.add('hidden');
+      document.getElementById('form-recovery').classList.add('hidden');
+    }
+
+    function switchAuthTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('form-login').classList.toggle('hidden', !isLogin);
+      document.getElementById('form-register').classList.toggle('hidden', isLogin);
+      document.getElementById('form-recovery').classList.add('hidden');
+
+      const lBtn = document.getElementById('tab-login-btn');
+      const rBtn = document.getElementById('tab-register-btn');
+      if (isLogin) {
+        lBtn.className = 'py-2 rounded-lg gold-gradient text-[#0D0E11] text-xs font-extrabold';
+        rBtn.className = 'py-2 rounded-lg text-slate-300 text-xs font-bold';
+      } else {
+        rBtn.className = 'py-2 rounded-lg gold-gradient text-[#0D0E11] text-xs font-extrabold';
+        lBtn.className = 'py-2 rounded-lg text-slate-300 text-xs font-bold';
+      }
+    }
+
+    async function handleUserRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const usernameKey = normalizeTextKey(username);
+      const phone = document.getElementById('reg-phone').value.trim();
+      const phoneClean = normalizePhone(phone);
+      const password = document.getElementById('reg-password').value;
+      const car = document.getElementById('reg-car').value.trim();
+      const address = document.getElementById('reg-address').value.trim();
+
+      if (phoneClean.length < 8) {
+        showToast('Informe um telefone válido com DDD.');
+        return;
+      }
+
+      const exists = state.users.some(u =>
+        normalizePhone(u.phone) === phoneClean ||
+        (u.username && normalizeTextKey(u.username) === usernameKey)
+      );
+      if (exists) {
+        showToast('Este usuário ou telefone já está cadastrado. Faça login.');
+        switchAuthTab('login');
+        return;
+      }
+
+      const newUser = {
+        name,
+        username,
+        usernameKey,
+        phone,
+        phoneClean,
+        password,
+        car,
+        address,
+        createdAt: Date.now()
+      };
+
+      if (db) {
+        try {
+          const docRef = await db.collection('users').add(newUser);
+          newUser.id = docRef.id;
+        } catch (err) {
+          console.warn('Erro ao salvar usuário no Firestore:', err);
+        }
+      } else {
+        newUser.id = 'usr-' + Date.now();
+        state.users.push(newUser);
+        localStorage.setItem('ngra_users', JSON.stringify(state.users));
+      }
+
+      setSession({ role: 'customer', ...newUser });
+      closeAuthModal();
+      showToast('Conta criada e salva na nuvem com sucesso!');
+    }
+
+    async function handleUnifiedLogin(e) {
+      e.preventDefault();
+      const rawId = document.getElementById('login-identifier').value.trim();
+      const textId = normalizeTextKey(rawId);
+      const cleanId = normalizePhone(rawId);
+      const pass = document.getElementById('login-password').value;
+
+      // 1. Check Master Admin (aceita 'admin' ou telefone Master)
+      if ((textId === 'admin' || (cleanId && cleanId === MASTER_ADMIN_PHONE)) && pass === state.masterPassword) {
+        setSession({ role: 'master', name: 'Administrador Master', phone: '(51) 98537-7892' });
+        closeAuthModal();
+        openAdminModal();
+        showToast('Bem-vindo, Administrador Master!');
+        return;
+      }
+
+      // 2. Check Network Supervisors (aceita Nome/Usuário OU Telefone)
+      const sup = state.supervisors.find(s =>
+        s.password === pass && (
+          (cleanId && normalizePhone(s.phone) === cleanId) ||
+          normalizeTextKey(s.name) === textId
+        )
+      );
+      if (sup) {
+        setSession({ role: 'supervisor', ...sup });
+        closeAuthModal();
+        openAdminModal();
+        showToast(`Bem-vindo, Supervisor ${sup.name}!`);
+        return;
+      }
+
+      // 3. Check Cloud Customer Accounts (aceita Usuário, Nome Completo OU Telefone)
+      const matchCustomer = (u) => {
+        if (u.password !== pass) return false;
+        const phoneMatch = cleanId && cleanId.length >= 8 && normalizePhone(u.phone) === cleanId;
+        const usernameMatch = u.username && normalizeTextKey(u.username) === textId;
+        const nameMatch = u.name && normalizeTextKey(u.name) === textId;
+        return phoneMatch || usernameMatch || nameMatch;
+      };
+
+      let customer = state.users.find(matchCustomer);
+
+      if (!customer && db) {
+        try {
+          const snap = await db.collection('users').get();
+          snap.forEach(doc => {
+            const data = { id: doc.id, ...doc.data() };
+            if (matchCustomer(data)) customer = data;
+          });
+        } catch (err) {
+          console.warn('Erro na consulta Firestore:', err);
+        }
+      }
+
+      if (customer) {
+        setSession({ role: 'customer', ...customer });
+        closeAuthModal();
+        showToast(`Olá, ${customer.name}!`);
+        return;
+      }
+
+      showToast('Usuário, telefone ou senha incorretos.');
+    }
+
+    function setSession(userObj) {
+      state.currentUser = userObj;
+      localStorage.setItem('ngra_session', JSON.stringify(userObj));
+      updateHeaderAuthUI();
+      prefillCustomerFields();
+    }
+
+    function logoutCurrentUser() {
+      state.currentUser = null;
+      localStorage.removeItem('ngra_session');
+      updateHeaderAuthUI();
+      showToast('Sessão encerrada.');
+    }
+
+    function updateHeaderAuthUI() {
+      const label = document.getElementById('auth-header-label');
+      const banner = document.getElementById('logged-user-banner');
+      const bannerName = document.getElementById('logged-user-name');
+
+      if (!state.currentUser) {
+        label.textContent = 'Acessar';
+        banner.classList.add('hidden');
+        return;
+      }
+
+      if (state.currentUser.role === 'master' || state.currentUser.role === 'supervisor') {
+        label.textContent = 'Painel ADM';
+        bannerName.textContent = `${state.currentUser.name} (${state.currentUser.role === 'master' ? 'ADM Master' : state.currentUser.unit})`;
+      } else {
+        label.textContent = state.currentUser.username || state.currentUser.name.split(' ')[0];
+        bannerName.textContent = `${state.currentUser.name} ${state.currentUser.username ? `(@${state.currentUser.username})` : ''}`;
+      }
+      banner.classList.remove('hidden');
+    }
+
+    function renderCustomerProfile() {
+      const u = state.currentUser;
+      document.getElementById('profile-name').textContent = u.name;
+      document.getElementById('profile-username').textContent = u.username ? `Usuário: ${u.username}` : '';
+      document.getElementById('profile-phone').textContent = u.phone;
+      document.getElementById('profile-car').textContent = u.car ? `Veículo: ${u.car}` : '';
+      document.getElementById('profile-address').textContent = u.address ? `Endereço: ${u.address}` : '';
+
+      const myBookings = state.bookings.filter(b => normalizePhone(b.customerPhone) === normalizePhone(u.phone));
+      const list = document.getElementById('customer-bookings-list');
+      if (myBookings.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400">Nenhum agendamento encontrado.</p>';
+        return;
+      }
+
+      list.innerHTML = myBookings.map(b => `
+        <div class="p-2.5 rounded-xl bg-[#0D0E11] border border-white/10 text-xs space-y-0.5">
+          <div class="flex justify-between font-bold text-white">
+            <span>${b.date.split('-').reverse().join('/')} às ${b.time}</span>
+            <span class="text-[#F3D478]">${formatBRL(b.total)}</span>
+          </div>
+          <div class="text-slate-400">${(b.services || []).join(', ')}</div>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 10. PASSWORD RECOVERY (VIA WHATSAPP CODE)
+    // =========================================================================
+    function openPasswordRecovery() {
+      document.getElementById('form-recovery').classList.remove('hidden');
+    }
+
+    function sendRecoveryCode() {
+      const phoneClean = normalizePhone(document.getElementById('rec-phone').value);
+      if (!phoneClean) {
+        showToast('Digite o telefone cadastrado.');
+        return;
+      }
+
+      if (phoneClean === MASTER_ADMIN_PHONE) {
+        state.recoveryTarget = { type: 'master', phone: '51985377892' };
+      } else {
+        const sup = state.supervisors.find(s => normalizePhone(s.phone) === phoneClean);
+        if (sup) {
+          state.recoveryTarget = { type: 'supervisor', id: sup.id, phone: phoneClean };
+        } else {
+          const usr = state.users.find(u => normalizePhone(u.phone) === phoneClean);
+          if (usr) {
+            state.recoveryTarget = { type: 'customer', id: usr.id, phone: phoneClean };
+          } else {
+            showToast('Telefone não encontrado no sistema.');
+            return;
+          }
+        }
+      }
+
+      state.recoveryCode = String(Math.floor(100000 + Math.random() * 900000));
+      document.getElementById('rec-step2').classList.remove('hidden');
+      document.getElementById('rec-sent-info').textContent = `Código enviado para o WhatsApp cadastrado: ${state.recoveryCode}`;
+
+      const waText = encodeURIComponent(`*NGRA Lavagem Automotiva* - Seu código de recuperação de senha é: *${state.recoveryCode}*`);
+      window.open(`https://wa.me/55${phoneClean}?text=${waText}`, '_blank');
+    }
+
+    async function confirmPasswordRecovery() {
+      const code = document.getElementById('rec-code-input').value.trim();
+      const newPass = document.getElementById('rec-new-pass').value;
+
+      if (code !== state.recoveryCode) {
+        showToast('Código inválido.');
+        return;
+      }
+      if (!newPass || newPass.length < 4) {
+        showToast('A nova senha deve ter no mínimo 4 caracteres.');
+        return;
+      }
+
+      if (state.recoveryTarget.type === 'master') {
+        state.masterPassword = newPass;
+        await syncConfigToCloud();
+      } else if (state.recoveryTarget.type === 'supervisor') {
+        const idx = state.supervisors.findIndex(s => s.id === state.recoveryTarget.id);
+        if (idx > -1) {
+          state.supervisors[idx].password = newPass;
+          localStorage.setItem('ngra_supervisors', JSON.stringify(state.supervisors));
+          if (db && state.recoveryTarget.id) {
+            await db.collection('supervisors').doc(state.recoveryTarget.id).update({ password: newPass });
+          }
+        }
+      } else if (state.recoveryTarget.type === 'customer') {
+        const idx = state.users.findIndex(u => u.id === state.recoveryTarget.id);
+        if (idx > -1) {
+          state.users[idx].password = newPass;
+          localStorage.setItem('ngra_users', JSON.stringify(state.users));
+          if (db && state.recoveryTarget.id) {
+            await db.collection('users').doc(state.recoveryTarget.id).update({ password: newPass });
+          }
+        }
+      }
+
+      showToast('Senha redefinida com sucesso! Faça login.');
+      document.getElementById('form-recovery').classList.add('hidden');
+      switchAuthTab('login');
+    }
+
+    // =========================================================================
+    // 11. ADMIN & SUPERVISORS PANEL
+    // =========================================================================
+    function openAdminModal() {
+      document.getElementById('admin-modal').classList.remove('hidden');
+      const u = state.currentUser;
+      document.getElementById('admin-welcome-title').textContent = u
+        ? `${u.name} ${u.unit ? `• ${u.unit}` : ''}`
+        : 'Administração';
+      document.getElementById('adm-km-rate').value = state.kmRate.toFixed(2);
+      renderAdminBookings();
+      renderAdminServices();
+      renderAdminSupervisors();
+    }
+
+    function closeAdminModal() {
+      document.getElementById('admin-modal').classList.add('hidden');
+    }
+
+    function switchAdminTab(tab) {
+      ['bookings', 'services', 'supervisors', 'settings'].forEach(t => {
+        document.getElementById(`adm-panel-${t}`).classList.toggle('hidden', t !== tab);
+        const btn = document.getElementById(`adm-tab-${t}`);
+        btn.className = t === tab
+          ? 'py-2 rounded-lg gold-gradient text-[#0D0E11]'
+          : 'py-2 rounded-lg text-slate-300';
+      });
+    }
+
+    function renderAdminBookings() {
+      const list = document.getElementById('adm-bookings-list');
+      const count = document.getElementById('adm-bookings-count');
+      if (!list) return;
+
+      count.textContent = `${state.bookings.length} total`;
+      if (state.bookings.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400">Nenhum agendamento registrado ainda.</p>';
+        return;
+      }
+
+      list.innerHTML = state.bookings.map(b => `
+        <div class="p-3 rounded-2xl bg-[#0D0E11] border border-white/10 text-xs space-y-1">
+          <div class="flex items-center justify-between">
+            <strong class="text-white">${b.customerName} (${b.customerPhone})</strong>
+            <span class="font-extrabold text-[#F3D478]">${formatBRL(b.total)}</span>
+          </div>
+          <div class="text-slate-300">📅 ${b.date.split('-').reverse().join('/')} às <strong>${b.time}</strong> • ${b.vehicleCategory} (${b.carModel})</div>
+          <div class="text-slate-400">🧼 ${(b.services || []).join(', ')}</div>
+          <div class="text-slate-400">📍 ${b.deliveryMode === 'pickup' ? `Leva e Traz: ${b.pickupAddress}` : 'Entrega na Lavagem'}</div>
+          <div class="pt-1 flex justify-end">
+            <button onclick="cancelBookingAdmin('${b.id}')" class="px-2.5 py-1 rounded-lg bg-red-500/15 text-red-300 font-bold hover:bg-red-500/25">Liberar Horário / Excluir</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function cancelBookingAdmin(id) {
+      if (db && !String(id).startsWith('local-')) {
+        await db.collection('bookings').doc(id).delete();
+      } else {
+        state.bookings = state.bookings.filter(b => b.id !== id);
+        localStorage.setItem('ngra_bookings', JSON.stringify(state.bookings));
+        renderAdminBookings();
+        renderTimeSlots();
+      }
+      showToast('Horário liberado com sucesso.');
+    }
+
+    function renderAdminServices() {
+      const list = document.getElementById('adm-services-list');
+      if (!list) return;
+      list.innerHTML = state.services.map((s, idx) => `
+        <div class="p-3 rounded-2xl bg-[#0D0E11] border border-white/10 text-xs space-y-2">
+          <div class="flex items-center justify-between">
+            <strong class="text-white">${s.name}</strong>
+            <button onclick="removeAdminService(${idx})" class="text-red-400 font-bold">Remover</button>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <span class="text-[10px] text-slate-400">Moto</span>
+              <input type="number" step="0.01" value="${s.prices.moto}" onchange="updateServicePrice(${idx}, 'moto', this.value)" class="w-full px-2 py-1 rounded bg-[#16181D] border border-white/10 text-white" />
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400">Hatch</span>
+              <input type="number" step="0.01" value="${s.prices.hatch}" onchange="updateServicePrice(${idx}, 'hatch', this.value)" class="w-full px-2 py-1 rounded bg-[#16181D] border border-white/10 text-white" />
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400">SUV</span>
+              <input type="number" step="0.01" value="${s.prices.suv}" onchange="updateServicePrice(${idx}, 'suv', this.value)" class="w-full px-2 py-1 rounded bg-[#16181D] border border-white/10 text-white" />
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function updateServicePrice(idx, cat, val) {
+      state.services[idx].prices[cat] = parseFloat(val) || 0;
+      await syncConfigToCloud();
+      renderServices();
+      updateTotalsUI();
+      showToast('Preço atualizado na nuvem!');
+    }
+
+    async function removeAdminService(idx) {
+      if (state.services.length <= 1) return;
+      state.services.splice(idx, 1);
+      await syncConfigToCloud();
+      renderAdminServices();
+      renderServices();
+    }
+
+    async function adminAddService(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-srv-name').value.trim();
+      const desc = document.getElementById('new-srv-desc').value.trim();
+      const moto = parseFloat(document.getElementById('new-srv-moto').value) || 0;
+      const hatch = parseFloat(document.getElementById('new-srv-hatch').value) || 0;
+      const suv = parseFloat(document.getElementById('new-srv-suv').value) || 0;
+
+      state.services.push({
+        id: 'srv-' + Date.now(),
+        name,
+        desc,
+        prices: { moto, hatch, suv }
+      });
+
+      await syncConfigToCloud();
+      e.target.reset();
+      renderAdminServices();
+      renderServices();
+      showToast('Novo serviço adicionado!');
+    }
+
+    function renderAdminSupervisors() {
+      const list = document.getElementById('adm-supervisors-list');
+      if (!list) return;
+      if (state.supervisors.length === 0) {
+        list.innerHTML = '<p class="text-xs text-slate-400">Nenhum supervisor cadastrado além do ADM Master.</p>';
+        return;
+      }
+
+      list.innerHTML = state.supervisors.map(s => `
+        <div class="p-2.5 rounded-xl bg-[#0D0E11] border border-white/10 flex items-center justify-between text-xs">
+          <div>
+            <strong class="text-white">${s.name}</strong> • <span class="text-[#F3D478]">${s.unit}</span>
+            <div class="text-slate-400">Tel: ${s.phone} • Senha: ${s.password}</div>
+          </div>
+          <button onclick="removeSupervisor('${s.id}')" class="text-red-400 font-bold">Excluir</button>
+        </div>
+      `).join('');
+    }
+
+    async function adminAddSupervisor(e) {
+      e.preventDefault();
+      const sup = {
+        name: document.getElementById('sup-name').value.trim(),
+        unit: document.getElementById('sup-unit').value.trim(),
+        phone: document.getElementById('sup-phone').value.trim(),
+        password: document.getElementById('sup-pass').value.trim() || '1234'
+      };
+
+      if (db) {
+        await db.collection('supervisors').add(sup);
+      } else {
+        sup.id = 'sup-' + Date.now();
+        state.supervisors.push(sup);
+        localStorage.setItem('ngra_supervisors', JSON.stringify(state.supervisors));
+        renderAdminSupervisors();
+      }
+
+      e.target.reset();
+      document.getElementById('sup-pass').value = '1234';
+      showToast('Supervisor cadastrado com sucesso!');
+    }
+
+    async function removeSupervisor(id) {
+      if (db && !String(id).startsWith('sup-')) {
+        await db.collection('supervisors').doc(id).delete();
+      } else {
+        state.supervisors = state.supervisors.filter(s => s.id !== id);
+        localStorage.setItem('ngra_supervisors', JSON.stringify(state.supervisors));
+        renderAdminSupervisors();
+      }
+      showToast('Supervisor removido.');
+    }
+
+    async function saveKmRate() {
+      const val = parseFloat(document.getElementById('adm-km-rate').value);
+      if (!isNaN(val) && val >= 0) {
+        state.kmRate = val;
+        await syncConfigToCloud();
+        showToast('Taxa por km atualizada!');
+      }
+    }
+
+    async function updateMasterPassword() {
+      const np = document.getElementById('adm-new-master-pass').value.trim();
+      if (np.length < 4) {
+        showToast('A senha deve ter no mínimo 4 caracteres.');
+        return;
+      }
+      state.masterPassword = np;
+      await syncConfigToCloud();
+      document.getElementById('adm-new-master-pass').value = '';
+      showToast('Senha Master atualizada com sucesso!');
+    }
+
+    // =========================================================================
+    // 12. BOOTSTRAP
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      detectDeviceEnvironment();
+      setupDefaultDate();
+      selectVehicle('hatch');
+      renderServices();
+      renderTimeSlots();
+      updateHeaderAuthUI();
+      initCloudSync();
+    });
+  </script>
+</body>
+</html>
